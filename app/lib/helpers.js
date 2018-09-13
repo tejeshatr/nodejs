@@ -44,9 +44,7 @@ helpers.createRandomString = function(strLength){
 		for(let i = 0; i < strLength; i++){
 			str += possibleChars[Math.floor(Math.random()*possibleChars.length)];
 		}
-
-		console.log('token:', '"'+str,'"');
-
+		
 		return str;
 	}
 }

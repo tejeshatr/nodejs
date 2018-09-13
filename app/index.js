@@ -112,5 +112,6 @@ router = {
 	'ping' : handlers.ping,
 	'' : handlers.home,
 	'users': handlers.users,
-	'tokens': handlers.tokens
+	'tokens': handlers.tokens,
+	'checks': handlers.checks,
 };

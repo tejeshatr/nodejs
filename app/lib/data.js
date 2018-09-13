@@ -57,7 +57,7 @@ lib.update = function(dir, file, data, callback){
 	// Open the file for writing
 	fs.open(lib.baseDir+dir+'/'+file+'.json', 'r+', function(err, fileDescriptor){
 		if(!err && fileDescriptor){
-			// COnvert data to string
+			// Convert data to string
 			var stringData = JSON.stringify(data);
 
 			// Truncate the file
