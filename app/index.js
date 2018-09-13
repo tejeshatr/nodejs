@@ -9,16 +9,10 @@ var http = require('http');
 var https = require('https');
 var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
-var config = require('./config');
+var config = require('./lib/config');
 var fs = require('fs');
-var _data = require('./lib/data');
-
-// TESTING
-// @TODO delete this
-_data.read('test', 'newFile', function(err, data){
-	console.log('This was the error:', err);
-	console.log('This is the data:', data);
-})
+var handlers = require('./lib/handlers');
+var helpers = require('./lib/helpers');
 
 // Creating the HTTP server
 var httpServer = http.createServer(function(req, res){
@@ -87,14 +81,13 @@ var unifiedServer = function(req, res){
 			'queryStringObject': queryStringObject,
 			'method': method,
 			'headers': headers,
-			'payload': buffer
+			'payload': helpers.parseJsonToObject(buffer)
 		}
 
 		// Route the request to the handler specified in the router
 		choosenHandler(data, function(statusCode, payload){
 			// Use the status code called back by the handler or default to 200
 			statusCode = typeof(statusCode) == 'number'? statusCode : 200;
-			console.log(payload);
 
 			// Use the payload called back by the handler or use empty object
 			payload = typeof(payload) == 'object' ? payload : {};
@@ -109,35 +102,15 @@ var unifiedServer = function(req, res){
 
 			// Log the request path
 			console.log('Request received on path: '+trimmedPath);
-			console.log('Returning this response: ', statusCode, payloadString);
-		})
-
-		// Send the response
-			res.end('Hello, world\n');
+			console.log('Returning this response: ', statusCode, payloadString,'\n');
+		});
 	});
 };
 
-// Define the handlers
-var handlers =  {};
-
-
-// Ping handler
-handlers.ping = function(data, callback){
-	callback(200);
-}
-
-// Home handler
-handlers.home = function(data, callback){
-	callback(200, {'response': 'Hello, world!'});
-};
-
-// Not found handler
-handlers.notFound = function(data, callback){
-	callback(404);
-};
-
 // Define a request router
-var router = {
+router = {
 	'ping' : handlers.ping,
-	'' : handlers.home
+	'' : handlers.home,
+	'users': handlers.users,
+	'tokens': handlers.tokens
 };
