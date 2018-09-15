@@ -84,7 +84,6 @@ helpers.sendTwilioSms = function(phone, msg, callback){
 		var req = https.request(requestDetails, function(res){
 			// Grab the status of the sent request
 			var status = res.statusCode;
-			console.log(status);
 			// Callback successfully if the request went through
 			if(status == 200 || status == 201)
 				callback(false);
