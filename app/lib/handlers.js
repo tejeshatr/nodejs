@@ -68,6 +68,30 @@ handlers.accountCreate = function(data, callback){
 		callback(405, undefined, 'html');
 };
 
+handlers.sessionCreate = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.title': 'Login to your Account',
+			'head.description': 'Please enter your phone number and password to access your account',
+			'body.class': 'sessionCreate'
+		};
+
+		// Read in the template as a string
+		helpers.getTemplate('sessionCreate', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});
+	} else
+		callback(405, undefined, 'html');
+};
+
 // Favicon
 handlers.favicon = function(data, callback){
   if(data.method == 'get'){
