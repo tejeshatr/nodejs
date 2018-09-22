@@ -92,6 +92,146 @@ handlers.sessionCreate = function(data, callback){
 		callback(405, undefined, 'html');
 };
 
+// Log Out
+handlers.sessionDeleted = function(data, callback){
+	if(data.method = 'get'){
+			var templateData = {
+				'head.title': 'Logged out',
+				'head.description': 'You have been logged out of your account',
+				'body.class': 'sessionDeleted'
+			};
+
+			helpers.getTemplate('sessionDeleted', templateData, function(err, str){
+				if(!err && str){
+					helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+						if(!err && fstr)
+							callback(200, fstr, 'html');
+						else
+							callback(500, undefined, 'html');
+					});
+				} else
+					callback(500, undefined, 'html');
+			});
+		} else
+		callback(405, undefined, 'html');
+};
+
+// Account Settings
+handlers.accountEdit = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.title': 'Account Settings',
+			'body.class': 'accountEdit'
+		};
+
+		helpers.getTemplate('accountEdit', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});	
+	} else
+		callback(405, undefined, 'html');
+};
+
+// Account Deleted
+handlers.accountDeleted = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.title': 'Account Deleted',
+			'head.description': 'You account has been deleted',
+			'body.class': 'accountDeleted'
+		};
+
+		helpers.getTemplate('accountDeleted', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});
+	} else	
+		callback(405, undefined, 'html');
+};
+
+// Create a new check
+handlers.checksCreate = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.title': 'Create a new check',
+			'body.class': 'checksCreate'
+		};
+
+		helpers.getTemplate('checksCreate', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});
+	} else
+		callback(405, undefined, 'html');
+};
+
+// List the checks (Dashboard)
+handlers.checksList = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.description': 'Dashboard',
+			'body.class': 'checksList'
+		};
+
+		helpers.getTemplate('checksList', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});
+	} else
+		callback(405, undefined, 'html');
+};
+
+// Editing a check
+handlers.checksEdit = function(data, callback){
+	if(data.method == 'get'){
+		var templateData = {
+			'head.description': 'Check Details',
+			'body.class': 'checksEdit'
+		};
+
+		helpers.getTemplate('checksEdit', templateData, function(err, str){
+			if(!err && str){
+				helpers.addUniversalTemplates(str, templateData, function(err, fstr){
+					if(!err && fstr)
+						callback(200, fstr, 'html');
+					else
+						callback(500, undefined, 'html');
+				});
+			} else
+				callback(500, undefined, 'html');
+		});
+	} else
+		callback(405, undefined, 'html')
+};
+
 // Favicon
 handlers.favicon = function(data, callback){
   if(data.method == 'get'){
@@ -180,7 +320,6 @@ handlers._users.post = function(data,callback){
   var password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
   var tosAgreement = typeof(data.payload.tosAgreement) == 'boolean' && data.payload.tosAgreement == true ? true : false;
 
-  console.log(firstName, lastName, phone, password, tosAgreement);
 
   if(firstName && lastName && phone && password && tosAgreement){
 	// Make sure the user doesnt already exist
@@ -570,7 +709,6 @@ handlers._checks.post = function(data,callback){
 		  if(!err && userData){
 			var userChecks = typeof(userData.checks) == 'object' && userData.checks instanceof Array ? userData.checks : [];
 			// Verify that user has less than the number of max-checks per user
-			console.log(userChecks, config.maxChecks);
 			if(userChecks.length < config.maxChecks){
 			  // Create random id for check
 			  var checkId = helpers.createRandomString(20);
@@ -638,7 +776,6 @@ handlers._checks.get = function(data,callback){
 		// Get the token that sent the request
 		var token = typeof(data.headers.token) == 'string' ? data.headers.token : false;
 		// Verify that the given token is valid and belongs to the user who created the check
-		console.log("This is check data",checkData);
 		handlers._tokens.verifyToken(token,checkData.userPhone,function(tokenIsValid){
 		  if(tokenIsValid){
 			// Return check data
