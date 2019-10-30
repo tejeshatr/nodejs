@@ -1,2 +1,2 @@
 # nodejs
-Exercises from node.js masterclass
+A simple Blog that runs on Node.JS
